@@ -42,13 +42,13 @@ void padding_upg(int channel, int size, int input[size][size][channel], int pad,
 }
 }
 
-// Bu kodda convolution layer fonksiyonuna bias değeri ve 3 kanallı image için convolution yapılacaktır.
-// 3 kanallı convoltion için önce tek tek R-G-B kanalları için farklı kernel filtreleri ile input arasında convolution yapılır daha sonra 3 tane 2 boyutlu matrix elde edilir.
-// Bu 3 matrix birbiriyle toplanır ve tek bir çıktı bulunur. En sonda ise bu tek çıktıya tek bir bias değeri toplanır ve output bulunur. Bias değeri tek bir sayı değeridir,
-// vektör veya matrix değildir.
-// convolution fonksiyonuna input olarak kanal sayısı girilmelidir (RGB için veya önceki convdan çıkan kanal sayısı), filtreye_size a da yeni bir parametre alınmalıdır (filtre sayısı), 
-// output olarakda 3. boyut eklenmeli (filtre sayısı kadar).
-// Bu işlemleri yapmak için yeni fonksiyon açılabilir conv_upg olarak.
+// Bu kodda convolution layer fonksiyonuna bias deÃ°eri ve 3 kanallÃ½ image iÃ§in convolution yapÃ½lacaktÃ½r.
+// 3 kanallÃ½ convoltion iÃ§in Ã¶nce tek tek R-G-B kanallarÃ½ iÃ§in farklÃ½ kernel filtreleri ile input arasÃ½nda convolution yapÃ½lÃ½r daha sonra 3 tane 2 boyutlu matrix elde edilir.
+// Bu 3 matrix birbiriyle toplanÃ½r ve tek bir Ã§Ã½ktÃ½ bulunur. En sonda ise bu tek Ã§Ã½ktÃ½ya tek bir bias deÃ°eri toplanÃ½r ve output bulunur. Bias deÃ°eri tek bir sayÃ½ deÃ°eridir,
+// vektÃ¶r veya matrix deÃ°ildir.
+// convolution fonksiyonuna input olarak kanal sayÃ½sÃ½ girilmelidir (RGB iÃ§in veya Ã¶nceki convdan Ã§Ã½kan kanal sayÃ½sÃ½), filtreye_size a da yeni bir parametre alÃ½nmalÃ½dÃ½r (filtre sayÃ½sÃ½), 
+// output olarakda 3. boyut eklenmeli (filtre sayÃ½sÃ½ kadar).
+// Bu iÃ¾lemleri yapmak iÃ§in yeni fonksiyon aÃ§Ã½labilir conv_upg olarak.
 
 
 void conv_upg (int input_channel, int size_input, int input[size_input][size_input][input_channel], int filtre_channel, int size_filtre, int filtre[size_filtre][size_filtre][filtre_channel * input_channel], int stride, int pad, int output[(size_input + (pad*2) - size_filtre) / stride + 1][(size_input + (pad*2)- size_filtre) / stride +1][filtre_channel]){
