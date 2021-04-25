@@ -6,10 +6,10 @@ void convolution2d (int size_input, int input[size_input][size_input], int size_
 	int padded_input[padded_size][padded_size];
 	padding(size_input, input, pad, padded_input);
 	int temp = 0;
-	for (y=0; y < padded_size - size_filtre +1 ; y++){         					    // burası input sütunları için döner
-		for (x=0; x< padded_size - size_filtre +1 ;x++){   						   // burası input satırları için döner
-			for (i=0; i<size_filtre; i++){    								   	  // burası filtre sütunları için döner
-				for (j=0; j<size_filtre; j++){ 									 // burası filtre satırları için döner
+	for (y=0; y < padded_size - size_filtre +1 ; y++){         					    // burasÃ½ input sÃ¼tunlarÃ½ iÃ§in dÃ¶ner
+		for (x=0; x< padded_size - size_filtre +1 ;x++){   						   // burasÃ½ input satÃ½rlarÃ½ iÃ§in dÃ¶ner
+			for (i=0; i<size_filtre; i++){    								   	  // burasÃ½ filtre sÃ¼tunlarÃ½ iÃ§in dÃ¶ner
+				for (j=0; j<size_filtre; j++){ 									 // burasÃ½ filtre satÃ½rlarÃ½ iÃ§in dÃ¶ner
 					temp += filtre[i][j] * padded_input[i+(y * stride)][j+(x * stride)];				
 				}
 			} 
