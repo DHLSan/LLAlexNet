@@ -1,0 +1,23 @@
+Conv-1 weight --> variable[0]
+Conv-1 bias ----> variable[1]
+
+Conv-2 weight --> variable[2]
+Conv-2 bias ----> variable[3]
+
+Conv-3 weight --> variable[4]
+Conv-3 bias ----> variable[5]
+
+Conv-4 weight --> variable[6]
+Conv-4 bias ----> variable[7]
+
+Conv-5 weight --> variable[8]
+Conv-5 bias ----> variable[9]
+
+FullyConnected-1 weight --> variable[10]
+FullyConnected-1 bias ----> variable[11]
+
+FullyConnected-2 weight --> variable[12]
+FullyConnected-2 bias ----> variable[13]
+
+FullyConnected-3 weight --> variable[14]
+FullyConnected-3 bias ----> variable[15]
