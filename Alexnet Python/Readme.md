@@ -1,1 +1,1 @@
-https://www.cs.toronto.edu/~guerzhoy/tf_alexnet/bvlc_alexnet.npy
+This file contains Alexnet python code written using tensorflow. The original code is taken from https://github.com/hjptriplebee. In order to run the code, test images must be uploaded and a trained weight file must be downloaded from https://www.cs.toronto.edu/~guerzhoy/tf_alexnet/bvlc_alexnet.npy. After these conditions are met, the Alexnet architecture is run by running the testModel.py code.
