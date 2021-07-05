@@ -61,7 +61,7 @@ if testImg.values():
         file = open("weight_2_yuvarlama_222.txt", "w")
 
 
-        file.write("{0}".format(sess.run(variables[2][4])))
+        file.write("{0}".format(sess.run(variables[2])))
 
 
 
