@@ -21,11 +21,11 @@ int main(void)
     if(fp = fopen("weight_0_yuvarlama.txt", "r")) {
         while ((ch = fgetc(fp)) != EOF ) {
         //printf("%f\n", ch);	
-		fscanf(fp, "%f", &kontrol[0]) != EOF;     // kontrol e atama yapıldı
+		fscanf(fp, "%f", &kontrol[0]) != EOF;     // kontrol e atama yapÃ½ldÃ½
         	//printf("%d \n",ch);
-		if(kontrol[0] != 0){                      // kontrol değeri 0 dan farklı ise
+		if(kontrol[0] != 0){                      // kontrol deÃ°eri 0 dan farklÃ½ ise
             nums[i][j][k][l] = kontrol[0];
-			++count;                // nums değerine aktarılır sayı
+			++count;                // nums deÃ°erine aktarÃ½lÃ½r sayÃ½
 			++i;
 			if(i == 96){
 				i = 0;
@@ -41,11 +41,11 @@ int main(void)
 			}
             kontrol[0] = 0;
         }
-        else            // txt dosyasında 0 sayısı olduğunda hata olmaması için
+        else            // txt dosyasÃ½nda 0 sayÃ½sÃ½ olduÃ°unda hata olmamasÃ½ iÃ§in
         {
-        	if(ch == 32){            			// sayı 0 ise ve "[" karakterine eşit değilse
-        		nums[i][j][k][l] = kontrol[0];	// içeri girer ve 0 sayısını atama yapar
-        		++count;                // nums değerine aktarılır sayı
+        	if(ch == 32){            			// sayÃ½ 0 ise ve "[" karakterine eÃ¾it deÃ°ilse
+        		nums[i][j][k][l] = kontrol[0];	// iÃ§eri girer ve 0 sayÃ½sÃ½nÃ½ atama yapar
+        		++count;                // nums deÃ°erine aktarÃ½lÃ½r sayÃ½
 			++i;
 			if(i == 96){
 				i = 0;
