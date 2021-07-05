@@ -1,1 +1,1 @@
-jj
+All layers of the Alexnet architecture, activation functions and all necessary functions, as well as the writing of the entire structure of the architecture within the main function, were carried out in the full_alexnet_code.c file.
