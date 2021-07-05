@@ -1,135 +1,126 @@
-# Copyright 2016 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-"""Contains a model definition for AlexNet.
-This work was first described in:
-  ImageNet Classification with Deep Convolutional Neural Networks
-  Alex Krizhevsky, Ilya Sutskever and Geoffrey E. Hinton
-and later refined in:
-  One weird trick for parallelizing convolutional neural networks
-  Alex Krizhevsky, 2014
-Here we provide the implementation proposed in "One weird trick" and not
-"ImageNet Classification", as per the paper, the LRN layers have been removed.
-Usage:
-  with slim.arg_scope(alexnet.alexnet_v2_arg_scope()):
-    outputs, end_points = alexnet.alexnet_v2(inputs)
-@@alexnet_v2
-"""
+# coding: UTF-8
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
+   file name: alexnet.py
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
+   create time: 2017年03月29日 星期三 17时13分01秒
+   author: Jipeng Huang
+   e-mail: huangjipengnju@gmail.com
+   github: https://github.com/hjptriplebee
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
+# based on Frederik Kratzert's alexNet with tensorflow
+#import tensorflow as tf
+import numpy as np
 import tensorflow.compat.v1 as tf
-import tf_slim as slim
+tf.disable_v2_behavior()
 
-# pylint: disable=g-long-lambda
-trunc_normal = lambda stddev: tf.truncated_normal_initializer(
-    0.0, stddev)
+# define different layer functions
+# we usually don't do convolution and pooling on batch and channel
+def maxPoolLayer(x, kHeight, kWidth, strideX, strideY, name, padding = "SAME"):
+    """max-pooling"""
+    return tf.nn.max_pool(x, ksize = [1, kHeight, kWidth, 1],
+                          strides = [1, strideX, strideY, 1], padding = padding, name = name)
 
+def dropout(x, keepPro, name = None):
+    """dropout"""
+    return tf.nn.dropout(x, keepPro, name)
 
-def alexnet_v2_arg_scope(weight_decay=0.0005):
-  with slim.arg_scope([slim.conv2d, slim.fully_connected],
-                      activation_fn=tf.nn.relu,
-                      biases_initializer=tf.constant_initializer(0.1),
-                      weights_regularizer=slim.l2_regularizer(weight_decay)):
-    with slim.arg_scope([slim.conv2d], padding='SAME'):
-      with slim.arg_scope([slim.max_pool2d], padding='VALID') as arg_sc:
-        return arg_sc
+def LRN(x, R, alpha, beta, name = None, bias = 1.0):
+    """LRN"""
+    return tf.nn.local_response_normalization(x, depth_radius = R, alpha = alpha,
+                                              beta = beta, bias = bias, name = name)
 
+def fcLayer(x, inputD, outputD, reluFlag, name):
+    """fully-connect"""
+    with tf.variable_scope(name) as scope:
+        w = tf.get_variable("w", shape = [inputD, outputD], dtype = "float")
+        b = tf.get_variable("b", [outputD], dtype = "float")
+        out = tf.nn.xw_plus_b(x, w, b, name = scope.name)
+        if reluFlag:
+            return tf.nn.relu(out)
+        else:
+            return out
 
-def alexnet_v2(inputs,
-               num_classes=1000,
-               is_training=True,
-               dropout_keep_prob=0.5,
-               spatial_squeeze=True,
-               scope='alexnet_v2',
-               global_pool=False):
-  """AlexNet version 2.
-  Described in: http://arxiv.org/pdf/1404.5997v2.pdf
-  Parameters from:
-  github.com/akrizhevsky/cuda-convnet2/blob/master/layers/
-  layers-imagenet-1gpu.cfg
-  Note: All the fully_connected layers have been transformed to conv2d layers.
-        To use in classification mode, resize input to 224x224 or set
-        global_pool=True. To use in fully convolutional mode, set
-        spatial_squeeze to false.
-        The LRN layers have been removed and change the initializers from
-        random_normal_initializer to xavier_initializer.
-  Args:
-    inputs: a tensor of size [batch_size, height, width, channels].
-    num_classes: the number of predicted classes. If 0 or None, the logits layer
-    is omitted and the input features to the logits layer are returned instead.
-    is_training: whether or not the model is being trained.
-    dropout_keep_prob: the probability that activations are kept in the dropout
-      layers during training.
-    spatial_squeeze: whether or not should squeeze the spatial dimensions of the
-      logits. Useful to remove unnecessary dimensions for classification.
-    scope: Optional scope for the variables.
-    global_pool: Optional boolean flag. If True, the input to the classification
-      layer is avgpooled to size 1x1, for any input size. (This is not part
-      of the original AlexNet.)
-  Returns:
-    net: the output of the logits layer (if num_classes is a non-zero integer),
-      or the non-dropped-out input to the logits layer (if num_classes is 0
-      or None).
-    end_points: a dict of tensors with intermediate activations.
-  """
-  with tf.variable_scope(scope, 'alexnet_v2', [inputs]) as sc:
-    end_points_collection = sc.original_name_scope + '_end_points'
-    # Collect outputs for conv2d, fully_connected and max_pool2d.
-    with slim.arg_scope([slim.conv2d, slim.fully_connected, slim.max_pool2d],
-                        outputs_collections=[end_points_collection]):
-      net = slim.conv2d(inputs, 64, [11, 11], 4, padding='VALID',
-                        scope='conv1')
-      # net = slim.max_pool2d(net, [3, 3], 2, scope='pool1')
-      # net = slim.conv2d(net, 192, [5, 5], scope='conv2')
-      # net = slim.max_pool2d(net, [3, 3], 2, scope='pool2')
-      # net = slim.conv2d(net, 384, [3, 3], scope='conv3')
-      # net = slim.conv2d(net, 384, [3, 3], scope='conv4')
-      # net = slim.conv2d(net, 256, [3, 3], scope='conv5')
-      # net = slim.max_pool2d(net, [3, 3], 2, scope='pool5')
+def my_func(arg):
+    arg = tf.convert_to_tensor(arg, dtype=tf.float32)
+    return arg
+def convLayer(x, kHeight, kWidth, strideX, strideY,
+              featureNum, name, padding = "SAME", groups = 1):
+    """convolution"""
+    channel = int(x.get_shape()[-1])
+    conv = lambda a, b: tf.nn.conv2d(a, b, strides = [1, strideY, strideX, 1], padding = padding)           # burda fonksiyon tanımlıyor conv2d çağırılmıyor, a b parametrelerine bağlı olarak conv fonksiyonu oluşturuluyor
+    #print("convvvv",conv.float())
+    with tf.variable_scope(name) as scope:
+        w = tf.get_variable("w", shape = [kHeight, kWidth, channel/groups, featureNum])
+        b = tf.get_variable("b", shape = [featureNum])
+        print("x:", x)
+        print("w:",w)
+        xNew = tf.split(value = x, num_or_size_splits = groups, axis = 3)
+        wNew = tf.split(value = w, num_or_size_splits = groups, axis = 3)
+        print("featureMap")
+        featureMap = [conv(t1, t2) for t1, t2 in zip(xNew, wNew)]
 
-      # Use conv2d instead of fully_connected layers.
-      with slim.arg_scope(
-          [slim.conv2d],
-          weights_initializer=trunc_normal(0.005),
-          biases_initializer=tf.constant_initializer(0.1)):
-        net = slim.conv2d(net, 4096, [5, 5], padding='VALID',
-                          scope='fc6')
-        net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
-                           scope='dropout6')
-        net = slim.conv2d(net, 4096, [1, 1], scope='fc7')
-        # Convert end_points_collection into a end_point dict.
-        end_points = slim.utils.convert_collection_to_dict(
-            end_points_collection)
-        if global_pool:
-          net = tf.reduce_mean(
-              input_tensor=net, axis=[1, 2], keepdims=True, name='global_pool')
-          end_points['global_pool'] = net
-        if num_classes:
-          net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
-                             scope='dropout7')
-          net = slim.conv2d(
-              net,
-              num_classes, [1, 1],
-              activation_fn=None,
-              normalizer_fn=None,
-              biases_initializer=tf.zeros_initializer(),
-              scope='fc8')
-          if spatial_squeeze:
-            net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
-          end_points[sc.name + '/fc8'] = net
-      return net, end_points
-alexnet_v2.default_image_size = 224
+        [print ("xnew:",xNew) for t1, t2 in zip(xNew, wNew)]
+        [print ("wnew:",wNew) for t1, t2 in zip(xNew, wNew)]
+        # sess = tf.Session()
+        # init = tf.global_variables_initializer()
+        # sess.run(init)
+ 
+        [print("t1= ",t1.numpy()) for t1, t2 in zip(xNew, wNew)]
+        
+        print("featureMapend")                                           #conv fonksiyonu burda çağırılıyor parametreleride t1 ve t2 veriliyor
+        mergeFeatureMap = tf.concat(axis = 3, values = featureMap)
+        # print mergeFeatureMap.shape
+        out = tf.nn.bias_add(mergeFeatureMap, b)
+        return tf.nn.relu(tf.reshape(out, mergeFeatureMap.get_shape().as_list()), name = scope.name)
+
+class alexNet(object):
+    """alexNet model"""
+    def __init__(self, x, keepPro, classNum, skip, modelPath = "bvlc_alexnet.npy"):
+        self.X = x
+        self.KEEPPRO = keepPro
+        self.CLASSNUM = classNum
+        self.SKIP = skip
+        self.MODELPATH = modelPath
+        #build CNN
+        self.buildCNN()
+
+    def buildCNN(self):
+        """build model"""
+        self.conv1 = convLayer(self.X, 11, 11, 4, 4, 96, "conv1", "VALID")
+        lrn1 = LRN(self.conv1, 2, 2e-05, 0.75, "norm1")
+        pool1 = maxPoolLayer(lrn1, 3, 3, 2, 2, "pool1", "VALID")
+
+        conv2 = convLayer(pool1, 5, 5, 1, 1, 256, "conv2", groups = 2)
+        lrn2 = LRN(conv2, 2, 2e-05, 0.75, "lrn2")
+        pool2 = maxPoolLayer(lrn2, 3, 3, 2, 2, "pool2", "VALID")
+
+        conv3 = convLayer(pool2, 3, 3, 1, 1, 384, "conv3")
+
+        conv4 = convLayer(conv3, 3, 3, 1, 1, 384, "conv4", groups = 2)
+
+        conv5 = convLayer(conv4, 3, 3, 1, 1, 256, "conv5", groups = 2)
+        pool5 = maxPoolLayer(conv5, 3, 3, 2, 2, "pool5", "VALID")
+
+        fcIn = tf.reshape(pool5, [-1, 256 * 6 * 6])
+        fc1 = fcLayer(fcIn, 256 * 6 * 6, 4096, True, "fc6")
+        dropout1 = dropout(fc1, self.KEEPPRO)
+
+        fc2 = fcLayer(dropout1, 4096, 4096, True, "fc7")
+        dropout2 = dropout(fc2, self.KEEPPRO)
+
+        self.fc3 = fcLayer(dropout2, 4096, self.CLASSNUM, True, "fc8")
+
+    def loadModel(self, sess):
+        """load model"""
+        wDict = np.load(self.MODELPATH, encoding = "bytes").item()
+        #for layers in model
+        for name in wDict:
+            if name not in self.SKIP:
+                with tf.variable_scope(name, reuse = True):
+                    for p in wDict[name]:
+                        if len(p.shape) == 1:
+                            #bias
+                            sess.run(tf.get_variable('b', trainable = False).assign(p))
+                        else:
+                            #weights
+                            sess.run(tf.get_variable('w', trainable = False).assign(p))
