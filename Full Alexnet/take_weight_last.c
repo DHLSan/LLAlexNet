@@ -66,7 +66,9 @@ int main(void)
 	int channel1_1 = 96, channel2_1 = 3, size_1 = 11;
 	float nums[channel1][channel2][size][size];
 	char f_open[23] = "weight_2_yuvarlama.txt";
+	
 	take_weight_convolution(channel1, channel2, size, nums, f_open);
+	
 	printf("num = %f", nums[0][0][0][0] );
 for(l = 0; l <= 4; l++){
 	for(k = 0; k <= 4 ; k++){
