@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//weightler atamadan önce deðiþkenlerin içi 0 ile doldurulabilinir
+
 
 void padding_upg(int channel, int size, float input[channel][size][size], int pad, 
 				 float out[channel][size+(pad*2)][size+(pad*2)]){
@@ -38,14 +38,7 @@ void padding_upg(int channel, int size, float input[channel][size][size], int pa
 					out[a][x][y] = input[a][x-pad][y-pad];
 				}		
 			}
-			/*
-			for (x=0 ; x<size+(pad*2); x++){
-				for (y=0 ; y<size+(pad*2); y++){
-					printf(" p[%d][%d][%d] = %d ",y+1,x+1,a+1,out[a][x][y]);
-				}
-				printf("\n");
-			}
-			*/
+
 		pad_yeni = pad;
 		count = 0;
 		}	
@@ -140,17 +133,7 @@ void conv_upg2 (int input_channel, int size_input, float input[input_channel][si
 	int n, l, m, chan;
 	
 	padding_upg(input_channel, size_input, input, pad, padded_input);
-	/*
-	for(n = 0; n < 3 ; n++){
-		printf("%d channel \n",n);
-		for(l = 0; l <7; l++){
-			for(m = 0; m <7; m++){	
-				printf("padding_in[%d][%d][%d] = %d ", m,l, n, padded_input[n][l][m]);
-			}
-		printf("\n");
-		}
-	}
-	*/
+
 	for(b = 0; b < filtre_sayisi; b++){	
 		float temp = 0;
 		for (y=0; y < padded_size - size_filtre +1 ; y++){         		
@@ -162,20 +145,15 @@ void conv_upg2 (int input_channel, int size_input, float input[input_channel][si
 							temp += filtre[b][count_filter][i][j] * padded_input[a][i+(y * stride)][j+(x * stride)];				
 						}
 					} 		
-				//printf(" outputa atanan deger : %d \n", output[y][x][a]);
-				//output_temp[y][x] = temp;
 				count_filter++;
 				}
 			temp = temp + bias[b];
 			temp = relu(temp);
 			output[b][y][x] = temp;
-			//printf("outputa atanan deger output[%d][%d][%d] = %d \n",x,y,b, output[b][y][x]);
 			count_filter = 0;
 			temp = 0;
 			}
-			//output_temp += temp; 
 		}
-	//	output_temp = 0;
 	}
 }
 
@@ -220,25 +198,7 @@ int main(){
 							{{-0.263, 0.656, 0.784, -0.864, 0.123}, {-0.741, 0.731, -0.217, -0.016, 0.543}, {-0.154, 0.078, 0.542, -0.045, 0.067}, {0.742, 0.317, -0.555, -0.674, 0.135}, {0.01, 0.006, -0.663, 0.176, 0.643}}
 							};
 							
-	// pythona göre input deðeri
-	//float input_py[3][5][5] = {
-	//						   {{0.4, }
-	//						   }
-	//}
-	/*
-	float filtre_1[2][3][2][2] = {
-								{{{0.250, -0.145}, {0.943, 0.136}},
-								 {{0.843, 0.189}, {-0.312, 0.576}},
-								 {{0.521, 0.741}, {0.235, -0.631}}
-								},
-								{{{0.542, -0.641}, {0.109, 0.403}},
-								 {{0.706, -0.294}, {0.402, 0.707}},
-								 {{0.410, -0.124}, {0.376, -0.265}}
-								}
-							};
-	*/
 	
-	//filtre python koduna göre yeniden yazýldý
 	float filtre_1 [2][3][2][2] = {
 									{{{0.250, 0.943}, {-0.145, 0.136}},
 									 {{0.521, 0.235}, {0.741, -0.631}},
@@ -276,28 +236,15 @@ int main(){
 		} 
 	}
 	
-	/*
-	for(a = 0; a < filt_sayisi; a++){
-		for(b = 0; b < max_size; b++){
-			for(c = 0; c < max_size; c++){
-				printf("output[%d][%d][%d] = %f     ", c,b,a,output_1[a][b][c]);
-			}
-			printf("\n");
-		} 
-	}
-	*/
-	
-	
-	
 	int inp_channel = 3, inp_size = 227, conv1_filtre_num = 96, conv1_size = 11, conv1_stride = 4, conv1_pad = 0;
 	float input[inp_channel][inp_size][inp_size];
 	float conv1_bias[conv1_filtre_num];
 	float conv1_filtre[conv1_filtre_num][inp_channel][conv1_size][conv1_size];
 	int output1_size = (inp_size + (conv1_pad*2) - conv1_size) / conv1_stride + 1;
 	float conv1_output[conv1_filtre_num][output1_size][output1_size];
-	//alexnet mimari baþlangiç
+	//alexnet mimari baÃ¾langiÃ§
 	//1.convolution layer
-	// 11x11 filtre stride = 4 96 tane kernel, input 3 kanallý, padding yok
+	// 11x11 filtre stride = 4 96 tane kernel, input 3 kanallÃ½, padding yok
 	conv_upg2(inp_channel, inp_size, input, conv1_filtre_num, conv1_bias, conv1_size, conv1_filtre, conv1_stride
 			 conv1_pad, conv1_output);
 			 
@@ -314,7 +261,7 @@ int main(){
 	int output2_size = (maxpool1_output_size + (conv2_pad*2) - conv2_size) / conv2_stride + 1;
 	float conv2_output[conv2_filtre_num][output2_size][output2_size];
 	//2. convolution layer
-	//5x5 filtre stride = 1 256 tane kernel, input 96 kanallý, padding = 2
+	//5x5 filtre stride = 1 256 tane kernel, input 96 kanallÃ½, padding = 2
 	conv_upg2(conv1_filtre_num, maxpool1_output_size, maxpool1_output, conv2_filtre_num, conv2_bias, conv2_size,
 	          conv2_filtre, conv2_stride, conv2_pad, conv2_output);
 	        
@@ -331,7 +278,7 @@ int main(){
 	int output3_size = (maxpool2_output_size + (conv3_pad*2) - conv3_size) / conv3_stride +1;
 	float conv3_output[conv3_filtre_num][output3_size][output3_size];
 	//3. convolution layer
-	//3x3 filtre stride = 1 384 tane kernel, input 256 kanallý, padding = 1
+	//3x3 filtre stride = 1 384 tane kernel, input 256 kanallÃ½, padding = 1
 	conv_upg2(conv2_filtre_num, maxpool2_output_size, maxpool2_output, conv3_filtre_num, conv3_bias, conv3_size,
 			  conv3_filtre, conv3_stride, conv3_pad, conv3_output);
 			  
@@ -341,7 +288,7 @@ int main(){
 	int output4_size = (output3_size + (conv4_pad*2) - conv4_size) / conv4_stride +1;
 	float conv4_output[conv4_filtre_num][output4_size][output4_size];
 	//4. convolution layer
-	//3x3 filtre stride = 1 384 tane kernel, input 384 kanallý, padding = 1
+	//3x3 filtre stride = 1 384 tane kernel, input 384 kanallÃ½, padding = 1
 	conv_upg2(conv3_filtre_num, output3_size, conv3_output, conv4_filtre_num, conv4_bias, conv4_size,
 			  conv4_filtre, conv4_stride, conv4_pad, conv4_output);
 	
@@ -351,7 +298,7 @@ int main(){
 	int output5_size = (output4_size + (conv5_pad*2) - conv5_size) / conv5_stride +1;
 	float conv5_output[conv5_filtre_num][output5_size][output5_size];
 	//5. convolution layer
-	//3x3 filtre stride = 1 256 tane kernel, input 384 kanallý, padding = 1
+	//3x3 filtre stride = 1 256 tane kernel, input 384 kanallÃ½, padding = 1
 	conv_upg2(conv4_filtre_num, output4_size, conv4_output, conv5_filtre_num, conv5_bias, conv5_size,
 		 	  conv5_filtre, conv5_stride, conv5_pad, conv5_output);
 	
@@ -361,10 +308,10 @@ int main(){
 	float maxpool3_output[conv5_filtre_num][maxpool3_output_size][maxpool3_output_size];
 	// maxpool filtre 3x3 stride = 2
 	maxpool(output5_size, conv5_filtre_num, maxpool_filtre_size3, maxpool3_stride, conv5_output, maxpool3_output);
-	//dropout varmýþ sonra
+	//dropout varmÃ½Ã¾ sonra
 	
 	
-	//önce flatten, sonra fully connected
+	//Ã¶nce flatten, sonra fully connected
 	float flatten_output[conv5_filtre_num * maxpool3_output_size * maxpool3_output_size];
 	flatten(maxpool3_output_size, conv5_filtre_num, maxpool3_output, flatten_output);
 	
@@ -376,7 +323,7 @@ int main(){
 	float fully1_output[fully1_neuron_size];
 	float fully1_bias[fully1_neuron_size];
 	fullyconnected_relu(fully1_size, flatten_output, fully1_neuron_size, fully1_neuron, fully1_output, fully1_bias);
-	//dropout varmýþ burdada
+	//dropout varmÃ½Ã¾ burdada
 	
 	//2. fully connected layer
 	//4096 neuron
@@ -387,7 +334,7 @@ int main(){
 	fullyconnected_relu(fully1_neuron_size, fully1_output, fully2_neuron_size, fully2_neuron, fully2_output, fully2_bias);
 	
 	//3. fully connected layer
-	//1000 neuron böylece en son 1000 class tahmini yapar
+	//1000 neuron bÃ¶ylece en son 1000 class tahmini yapar
 	int fully3_neuron_size = 1000;
 	float fully3_neuron[fully3_neuron_size][fully2_neuron_size];
 	float fully3_output[fully3_neuron_size];
