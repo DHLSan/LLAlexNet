@@ -1,1 +1,1 @@
-In this file, there are test codes we made to implement our Alexnet architecture in C language.
+In this file, there are test codes we made to implement our Alexnet architecture in C language. First of all, various attempts were made by writing the neural_lowlevel.py code in order to understand the logic of the neural network structure.
