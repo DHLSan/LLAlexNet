@@ -29,6 +29,8 @@ The Alexnet Python folder contains the prepared python code of the Alexnet archi
 In the Full Alexnet folder, there is a completely written version of the Alexnet architecture in C code. In addition, there is a function written to use the weights transferred to the txt file in C code. In the full_alexnet_code.c file, the entire architecture is ready to run, but there is no training in the code. Therefore, the trained weight parameters must be given to the filter, but it can work correctly in this way. As stated before, in order to perform this operation, transferring from python to txt file is performed. However, the Alexnet architecture is divided into 2 parts after the first convolution layer and the operations continue. For this reason, when we try to get the weights, we can only pull half of the weights after the first convolution layer. Despite our great efforts, we could not succeed. Therefore, unfortunately, we could not find the opportunity to test whether the architecture works correctly.
 
 In the future, we aim to test the accuracy of our architecture by overcoming this point where we are stuck. In addition, we aim to have training in C code by adding the necessary operations for the training phase into our C code.
+![orwhole block design](https://user-images.githubusercontent.com/57463112/124769673-544b7900-df42-11eb-869e-120e24963105.jpg)
+
 
 ## References
 [1]	Bjerge, K., Schougaard, J., & Larsen, D. E. (2020). A generic and efficient convolutional neural network accelerator using HLS for a system on chip design. arXiv preprint arXiv:2004.13075.
