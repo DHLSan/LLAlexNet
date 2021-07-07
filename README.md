@@ -34,6 +34,8 @@ In the future, we aim to test the accuracy of our architecture by overcoming thi
 
 ## References
 [1]	Bjerge, K., Schougaard, J., & Larsen, D. E. (2020). A generic and efficient convolutional neural network accelerator using HLS for a system on chip design. arXiv preprint arXiv:2004.13075.
+
 [2]	Rongshi, D., & Yongming, T. (2019, June). Accelerator Implementation of Lenet-5 Convolution Neural Network Based on FPGA with HLS. In 2019 3rd International Conference on Circuits, System and Simulation (ICCSS) (pp. 64-67). IEEE.
+
 [3]	Zhang, C., Li, P., Sun, G., Guan, Y., Xiao, B., & Cong, J. (2015, February). Optimizing fpga-based accelerator design for deep convolutional neural networks. In Proceedings of the 2015 ACM/SIGDA international symposium on field-programmable gate arrays (pp. 161-170).
 
