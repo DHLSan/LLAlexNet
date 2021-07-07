@@ -18,7 +18,7 @@
 
 - **Supervisor e-mail:** isan@eskisehir.edu.tr
 
-### Link to Youtube Video: 
+### Link to Youtube Video: https://www.youtube.com/watch?v=czhXDm4b7yk
 
 
 
