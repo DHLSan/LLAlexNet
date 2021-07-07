@@ -3,7 +3,8 @@
 ## **LLAlexNet: CNN Accelerator for Low Latency Cloud Integration**
 
 **A repository of my Xilinx Open Hardware 2021 submission including LLAlexNet on ZEDBOARD ZYNQ-7000 SOC Development Boards, C source code and projects for Vivado HLS and projects for Vivado.**
-**project team number : xohw21-256
+
+**project team number : xohw21-256**
 
 - _**University Name: Eskisehir Technical University**_
 
